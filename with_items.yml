@@ -15,3 +15,4 @@
     - name: Restart Service
       service: "name=puppet state=restarted"
       when: yum_result is changed
+#
