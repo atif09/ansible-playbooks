@@ -1,0 +1,14 @@
+---
+- hosts: dbgroup
+  user: ansadm
+  become: yes
+  become_method: sudo
+  tasks:
+   - name: copy jdk
+     copy: "src=jdk-8u161-linux-x64.rpm dest=/tmp/jdk-8u161-linux-x64.rpm"
+     tags: copy_jdk
+   - name: install jdk
+     yum: "name=/tmp/jdk-8u161-linux-x64.rpm state=present"
+     when: ansible_os_family == 'RedHat'
+     tags: install_jdk
+
