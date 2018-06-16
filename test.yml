@@ -1,0 +1,29 @@
+---
+ - hosts: all 
+   user: ansadm
+   become: yes
+   become_method: sudo
+   tasks:
+    - name: copy
+      copy: "src=/var/tmp/test_2 dest=/var/tmp/test_2"
+    - name: install nmap
+      yum: "name=nmap state=present"
+    - name: install screen 
+      yum: "name=screen state=present"
+      tags: screen
+    - name: copy sshd_config
+      copy: "src=sshd_config dest=/etc/ssh/sshd_config backup=yes"
+      register: copy_result
+      tags: copy_sshd
+    - name: restart sshd
+      service: "name=sshd state=restarted"
+      when: copy_result is changed
+      tags: restart_sshd
+ - hosts: dbgroup
+   user: ansadm
+   become: yes
+   become_method: sudo
+   tasks:
+    - name: install vsftpd 
+      yum: "name=vsftpd state=present"
+      tags: vsftpd 
